@@ -1,24 +1,28 @@
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
+import React from "react";
+import TextRow from "./componets/TextRow";
 
-const deepClone = (object) =>{
-	/* This function will create a "deep-clone" of an object which is necessary
+
+const deepClone = (object) => {
+  /* This function will create a "deep-clone" of an object which is necessary
 	when creating a copy an object with multiple nested layers of objects or arrays. */
-	return JSON.parse(JSON.stringify(object))
-}
+  return JSON.parse(JSON.stringify(object));
+};
 
 const App = () => {
   return (
     <div className="App-header">
-      <KeyboardGrid/>
+      <div><TextRow></TextRow></div>
+      <KeyboardGrid />
+     
     </div>
   );
-}
+};
 
 const KeyboardGrid = (props) => {
-
-	const keyBoardArr = [
-		[
+  const keyBoardArr = [
+    [
       { letter: "`", isPressed: false },
       { letter: "1", isPressed: false },
       { letter: "2", isPressed: false },
@@ -30,9 +34,9 @@ const KeyboardGrid = (props) => {
       { letter: "8", isPressed: false },
       { letter: "9", isPressed: false },
       { letter: "0", isPressed: false },
-			{ letter: "-", isPressed: false },
-			{ letter: "=", isPressed: false },
-			{ letter: "Backspace", isPressed: false }
+      { letter: "-", isPressed: false },
+      { letter: "=", isPressed: false },
+      { letter: "Backspace", isPressed: false },
     ],
     [
       { letter: "Tab", isPressed: false },
@@ -63,10 +67,10 @@ const KeyboardGrid = (props) => {
       { letter: "L", isPressed: false },
       { letter: ";", isPressed: false },
       { letter: "'", isPressed: false },
-			{ letter: "Enter", isPressed: false }
+      { letter: "Enter", isPressed: false },
     ],
     [
-			{ letter: "Shift", isPressed: false },
+      { letter: "Shift", isPressed: false },
       { letter: "Z", isPressed: false },
       { letter: "X", isPressed: false },
       { letter: "C", isPressed: false },
@@ -79,22 +83,20 @@ const KeyboardGrid = (props) => {
       { letter: "/", isPressed: false },
       { letter: "Shift", isPressed: false },
     ],
-		[
-			{ letter: " ", isPressed: false }
-		]
+    [{ letter: " ", isPressed: false }],
   ];
 
   const [keyRows, setKeyRows] = useState(keyBoardArr);
 
   const handleKeyDown = (event) => {
-		console.log(event.key)
+    console.log(event.key);
   };
 
   const handleKeyUp = (event) => {
-		console.log(event.key)
+    console.log(event.key);
   };
 
-	/* The following lines for the useRef and useEffect are serving a single purpose for us, it is getting the div in the JSX of <KeyboardGrid/> and focusing it on page load.*/
+  /* The following lines for the useRef and useEffect are serving a single purpose for us, it is getting the div in the JSX of <KeyboardGrid/> and focusing it on page load.*/
   const ref = useRef(null);
 
   useEffect(() => {
@@ -106,32 +108,27 @@ const KeyboardGrid = (props) => {
       className="Keyboard-grid"
       ref={ref}
       tabIndex={-1}
-			onKeyDown={handleKeyDown}
-      onKeyUp={handleKeyUp}
-    >
-			{keyRows.map((keyRow, index)=>{
-				return <KeyboardRow keyRow={keyRow} key={index}/>
-			})}
+      onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}>
+      {keyRows.map((keyRow, index) => {
+        return <KeyboardRow keyRow={keyRow} key={index} />;
+      })}
     </div>
   );
 };
 
 const KeyboardRow = (props) => {
-	return (
-		<div className="Keyboard-row">
-			{props.keyRow.map((keyObject, index)=>{
-				return <KeyboardKey keyObject={keyObject} key={index}/>
-			})}
-		</div>
-	)
-}
+  return (
+    <div className="Keyboard-row">
+      {props.keyRow.map((keyObject, index) => {
+        return <KeyboardKey keyObject={keyObject} key={index} />;
+      })}
+    </div>
+  );
+};
 
 const KeyboardKey = (props) => {
-	return (
-		<div className="Keyboard-key">
-			{props.keyObject.letter}
-		</div>
-	)
-}
+  return <div className="Keyboard-key">{props.keyObject.letter}</div>;
+};
 
 export default App;
