@@ -3,7 +3,6 @@ import "./App.css";
 import React from "react";
 import TextRow from "./componets/TextRow";
 
-
 const deepClone = (object) => {
   /* This function will create a "deep-clone" of an object which is necessary
 	when creating a copy an object with multiple nested layers of objects or arrays. */
@@ -11,11 +10,25 @@ const deepClone = (object) => {
 };
 
 const App = () => {
+ const [textAlong,setTextAlong] = useState("")
+ const textHandler = (keyObj) =>{
+setTextAlong(textAlong.concat(keyObj.letter.toLowerCase()))
+if (keyObj.letter==='Backspace') {
+  let backSpaceFunc = textAlong.length -1 ;
+console.log(textAlong)
+  let newText =textAlong.slice(backSpaceFunc,0)
+setTextAlong(newText.concat(newText))
+console.log(newText)
+}
+
+
+ }
   return (
     <div className="App-header">
-      <div><TextRow></TextRow></div>
-      <KeyboardGrid />
-     
+      <div>
+        <TextRow textAlong = {textAlong}></TextRow>
+      </div>
+      <KeyboardGrid textHandler={textHandler} />
     </div>
   );
 };
@@ -87,13 +100,38 @@ const KeyboardGrid = (props) => {
   ];
 
   const [keyRows, setKeyRows] = useState(keyBoardArr);
+  const [keyRowClone, setKeyRowClone] = useState([...keyRows]);
+  const [keyHitDown, setKeyHitDown] = useState({});
+  const [keyHitUp, setKeyUp] = useState({});
 
-  const handleKeyDown = (event) => {
-    console.log(event.key);
+  const handleKeyDown = (e) => {
+    let keyRowClone = [...keyRows];
+    keyRowClone.map((keyArr, index) => {
+      keyArr.map((keyObj, index) => {
+        if (keyObj.letter.toLowerCase() === e.key.toLowerCase()) {
+          console.log(keyObj.isPressed);
+
+          setKeyHitDown(e.key);
+         
+         props.textHandler(keyObj)
+          return (keyObj.isPressed = true);
+        }
+      });
+    });
   };
 
-  const handleKeyUp = (event) => {
-    console.log(event.key);
+  const handleKeyUp = (e) => {
+    let keyRowClone = [...keyRows];
+    keyRowClone.map((keyArr, index) => {
+      keyArr.map((keyObj, index) => {
+        if (keyObj.letter.toLowerCase() === e.key.toLowerCase()) {
+          console.log(e.key);
+          setKeyUp(e.key);
+          console.log(keyObj.isPressed);
+          return (keyObj.isPressed = false);
+        }
+      });
+    });
   };
 
   /* The following lines for the useRef and useEffect are serving a single purpose for us, it is getting the div in the JSX of <KeyboardGrid/> and focusing it on page load.*/
@@ -109,8 +147,10 @@ const KeyboardGrid = (props) => {
       ref={ref}
       tabIndex={-1}
       onKeyDown={handleKeyDown}
-      onKeyUp={handleKeyUp}>
+    
+     onKeyUp={handleKeyUp}>
       {keyRows.map((keyRow, index) => {
+        // console.log(keyRow);
         return <KeyboardRow keyRow={keyRow} key={index} />;
       })}
     </div>
@@ -121,6 +161,7 @@ const KeyboardRow = (props) => {
   return (
     <div className="Keyboard-row">
       {props.keyRow.map((keyObject, index) => {
+        // console.log(keyObject);
         return <KeyboardKey keyObject={keyObject} key={index} />;
       })}
     </div>
@@ -128,7 +169,19 @@ const KeyboardRow = (props) => {
 };
 
 const KeyboardKey = (props) => {
-  return <div className="Keyboard-key">{props.keyObject.letter}</div>;
+  let keyboardKeyClass;
+  if (props.keyObject.isPressed === false) {
+    keyboardKeyClass = { color: "green" };
+  }
+  if (props.keyObject.isPressed === true) {
+    keyboardKeyClass = { color: "red" };
+  }
+
+  return (
+    <div style={keyboardKeyClass} className="Keyboard-key">
+      {props.keyObject.letter}
+    </div>
+  );
 };
 
 export default App;
