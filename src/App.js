@@ -15,10 +15,13 @@ const App = () => {
 setTextAlong(textAlong.concat(keyObj.letter.toLowerCase()))
 if (keyObj.letter==='Backspace') {
   let backSpaceFunc = textAlong.length -1 ;
-console.log(textAlong)
-  let newText =textAlong.slice(backSpaceFunc,0)
-setTextAlong(newText.concat(newText))
-console.log(newText)
+let backSpaceFunc2 = textAlong.length -3;
+  console.log(textAlong)
+  let newText =textAlong.substring(backSpaceFunc,0)
+setTextAlong(newText);
+if (keyObj.letter === " ") {
+  setTextAlong(textAlong.concat(" "));
+}
 }
 
 
