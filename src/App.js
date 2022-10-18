@@ -15,7 +15,7 @@ const App = () => {
 setTextAlong(textAlong.concat(keyObj.letter.toLowerCase()))
 if (keyObj.letter==='Backspace') {
   let backSpaceFunc = textAlong.length -1 ;
-let backSpaceFunc2 = textAlong.length -3;
+
   console.log(textAlong)
   let newText =textAlong.substring(backSpaceFunc,0)
 setTextAlong(newText);
@@ -128,7 +128,7 @@ const KeyboardGrid = (props) => {
     keyRowClone.map((keyArr, index) => {
       keyArr.map((keyObj, index) => {
         if (keyObj.letter.toLowerCase() === e.key.toLowerCase()) {
-          console.log(e.key);
+          console.log(keyObj);
           setKeyUp(e.key);
           console.log(keyObj.isPressed);
           return (keyObj.isPressed = false);
