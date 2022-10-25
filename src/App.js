@@ -1,190 +1,128 @@
-import { useState, useRef, useEffect } from "react";
+import logo from "./logo.svg";
 import "./App.css";
-import React from "react";
-import TextRow from "./componets/TextRow";
+import { useState } from "react";
 
-const deepClone = (object) => {
-  /* This function will create a "deep-clone" of an object which is necessary
-	when creating a copy an object with multiple nested layers of objects or arrays. */
-  return JSON.parse(JSON.stringify(object));
-};
-
-const App = () => {
- const [textAlong,setTextAlong] = useState("")
- const textHandler = (keyObj) =>{
-setTextAlong(textAlong.concat(keyObj.letter.toLowerCase()))
-if (keyObj.letter==='Backspace') {
-  let backSpaceFunc = textAlong.length -1 ;
-
-  console.log(textAlong)
-  let newText =textAlong.substring(backSpaceFunc,0)
-setTextAlong(newText);
-if (keyObj.letter === " ") {
-  setTextAlong(textAlong.concat(" "));
-}
-}
-
-
- }
+const MovieComponent = (props) => {
+  console.log(props.movie);
+  const movie = props.movie;
   return (
-    <div className="App-header">
-      <div>
-        <TextRow textAlong = {textAlong}></TextRow>
-      </div>
-      <KeyboardGrid textHandler={textHandler} />
+    <div>
+      <h1>{movie.title}</h1>
+      {<img src={movie.poster}></img>}
     </div>
   );
 };
 
-const KeyboardGrid = (props) => {
-  const keyBoardArr = [
-    [
-      { letter: "`", isPressed: false },
-      { letter: "1", isPressed: false },
-      { letter: "2", isPressed: false },
-      { letter: "3", isPressed: false },
-      { letter: "4", isPressed: false },
-      { letter: "5", isPressed: false },
-      { letter: "6", isPressed: false },
-      { letter: "7", isPressed: false },
-      { letter: "8", isPressed: false },
-      { letter: "9", isPressed: false },
-      { letter: "0", isPressed: false },
-      { letter: "-", isPressed: false },
-      { letter: "=", isPressed: false },
-      { letter: "Backspace", isPressed: false },
-    ],
-    [
-      { letter: "Tab", isPressed: false },
-      { letter: "Q", isPressed: false },
-      { letter: "W", isPressed: false },
-      { letter: "E", isPressed: false },
-      { letter: "R", isPressed: false },
-      { letter: "T", isPressed: false },
-      { letter: "Y", isPressed: false },
-      { letter: "U", isPressed: false },
-      { letter: "I", isPressed: false },
-      { letter: "O", isPressed: false },
-      { letter: "P", isPressed: false },
-      { letter: "[", isPressed: false },
-      { letter: "]", isPressed: false },
-      { letter: "\\", isPressed: false },
-    ],
-    [
-      { letter: "CapsLock", isPressed: false },
-      { letter: "A", isPressed: false },
-      { letter: "S", isPressed: false },
-      { letter: "D", isPressed: false },
-      { letter: "F", isPressed: false },
-      { letter: "G", isPressed: false },
-      { letter: "H", isPressed: false },
-      { letter: "J", isPressed: false },
-      { letter: "K", isPressed: false },
-      { letter: "L", isPressed: false },
-      { letter: ";", isPressed: false },
-      { letter: "'", isPressed: false },
-      { letter: "Enter", isPressed: false },
-    ],
-    [
-      { letter: "Shift", isPressed: false },
-      { letter: "Z", isPressed: false },
-      { letter: "X", isPressed: false },
-      { letter: "C", isPressed: false },
-      { letter: "V", isPressed: false },
-      { letter: "B", isPressed: false },
-      { letter: "N", isPressed: false },
-      { letter: "M", isPressed: false },
-      { letter: ",", isPressed: false },
-      { letter: ".", isPressed: false },
-      { letter: "/", isPressed: false },
-      { letter: "Shift", isPressed: false },
-    ],
-    [{ letter: " ", isPressed: false }],
-  ];
-
-  const [keyRows, setKeyRows] = useState(keyBoardArr);
-  const [keyRowClone, setKeyRowClone] = useState([...keyRows]);
-  const [keyHitDown, setKeyHitDown] = useState({});
-  const [keyHitUp, setKeyUp] = useState({});
-
-  const handleKeyDown = (e) => {
-    let keyRowClone = [...keyRows];
-    keyRowClone.map((keyArr, index) => {
-      keyArr.map((keyObj, index) => {
-        if (keyObj.letter.toLowerCase() === e.key.toLowerCase()) {
-          console.log(keyObj.isPressed);
-
-          setKeyHitDown(e.key);
-         
-         props.textHandler(keyObj)
-          return (keyObj.isPressed = true);
-        }
-      });
-    });
-  };
-
-  const handleKeyUp = (e) => {
-    let keyRowClone = [...keyRows];
-    keyRowClone.map((keyArr, index) => {
-      keyArr.map((keyObj, index) => {
-        if (keyObj.letter.toLowerCase() === e.key.toLowerCase()) {
-          console.log(keyObj);
-          setKeyUp(e.key);
-          console.log(keyObj.isPressed);
-          return (keyObj.isPressed = false);
-        }
-      });
-    });
-  };
-
-  /* The following lines for the useRef and useEffect are serving a single purpose for us, it is getting the div in the JSX of <KeyboardGrid/> and focusing it on page load.*/
-  const ref = useRef(null);
-
-  useEffect(() => {
-    ref.current.focus();
-  }, []);
+const MovieForm = (props) => {
+  const [Title, setTitle] = useState("");
+  const [Director, setDirector] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [selectedMovie, setSelectedMovie] = useState("");
 
   return (
-    <div
-      className="Keyboard-grid"
-      ref={ref}
-      tabIndex={-1}
-      onKeyDown={handleKeyDown}
-    
-     onKeyUp={handleKeyUp}>
-      {keyRows.map((keyRow, index) => {
-        // console.log(keyRow);
-        return <KeyboardRow keyRow={keyRow} key={index} />;
+    <div>
+      <label>Title:MOfo</label>
+      <input
+        type="text"
+        onChange={(e) => {
+          setTitle(e.target.value);
+        }}
+      />
+      <p>Current Title: {Title}</p>
+      <button
+        onClick={() => {
+          const newMovie = {
+            Title,
+            Director,
+            Images: [],
+          };
+          props.handleAddMovie(newMovie);
+        }}>
+        Add Movie
+      </button>
+
+      <select
+        onChange={(e) => {
+          setSelectedMovie(e.target.value);
+        }}>
+        {props.movieList.map((movie) => {
+          return <option value={movie.Title}>{movie.Title}</option>;
+        })}
+      </select>
+
+      <input
+        type="text"
+        onChange={(e) => {
+          setImageUrl(e.target.value);
+        }}
+      />
+      <button
+        onClick={() => {
+          props.handleAddImageToMovie(selectedMovie, imageUrl);
+        }}>
+        Add Image
+      </button>
+    </div>
+  );
+};
+
+const MoviesDisplay = (props) => {
+  return (
+    <div>
+      {props.movieList.map((movie, index) => {
+        return <MovieItem movie={movie} key={index} />;
       })}
     </div>
   );
 };
 
-const KeyboardRow = (props) => {
+const MovieItem = (props) => {
   return (
-    <div className="Keyboard-row">
-      {props.keyRow.map((keyObject, index) => {
-        // console.log(keyObject);
-        return <KeyboardKey keyObject={keyObject} key={index} />;
-      })}
+    <div>
+      <h1>{props.movie.Title}</h1>
+      <p>{props.movie.Director}</p>
+      {props.movie.Images &&
+        props.movie.Images.map((imageUrl) => {
+          console.log(imageUrl);
+          return <img src={imageUrl.toString()}></img>;
+        })}
+      <hr />
     </div>
   );
 };
 
-const KeyboardKey = (props) => {
-  let keyboardKeyClass;
-  if (props.keyObject.isPressed === false) {
-    keyboardKeyClass = { color: "green" };
-  }
-  if (props.keyObject.isPressed === true) {
-    keyboardKeyClass = { color: "red" };
-  }
+function App() {
+  const [movieList, setMovieList] = useState([]);
 
+  const handleAddMovie = (newMovie) => {
+    const movieListCopy = [...movieList, newMovie];
+    movieListCopy.push(newMovie);
+    setMovieList(movieListCopy);
+    setMovieList(movieListCopy);
+  };
+
+  const handleAddImageToMovie = (movieTitleToTarget, imageUrlToAdd) => {
+    const movieListCopy = [...movieList];
+
+    const movieTargetIndex = movieListCopy.findIndex((movie) => {
+      return movie.Title === movieTitleToTarget;
+    });
+    movieListCopy[movieTargetIndex].Images.push(imageUrlToAdd);
+
+    setMovieList(movieListCopy);
+  };
+
+  console.log(movieList);
   return (
-    <div style={keyboardKeyClass} className="Keyboard-key">
-      {props.keyObject.letter}
+    <div className="App App-header">
+      <MovieForm
+        handleAddMovie={handleAddMovie}
+        movieList={movieList}
+        handleAddImageToMovie={handleAddImageToMovie}
+      />
+      <MoviesDisplay movieList={movieList} />
     </div>
   );
-};
+}
 
 export default App;
