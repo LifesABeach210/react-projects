@@ -102,4 +102,30 @@ function App() {
     setMovieList(movieListCopy);
   };
 
+  const handleAddImageToMovie = (movieTitleToTarget, imageUrlToAdd) => {
+    const movieListCopy = [...movieList];
+
+    const movieTargetIndex = movieListCopy.findIndex((movie) => {
+      return movie.Title === movieTitleToTarget;
+    });
+    movieListCopy[movieTargetIndex].Images.push(imageUrlToAdd);
+
+    setMovieList(movieListCopy);
+  };
+
+  console.log(movieList);
+  return (
+    <div className="App App-header">
+      <MovieForm
+        handleAddMovie={handleAddMovie}
+        movieList={movieList}
+        handleAddImageToMovie={handleAddImageToMovie}
+      />
+      <MoviesDisplay movieList={movieList} />
+    </div>
+  );
+}
+
+export default App;
+
  
